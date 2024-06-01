@@ -74,7 +74,7 @@
 }
 
 body {
-  font-family: var(--font-poppins)
+  font-family: var(--font-poppins);
 }
 
 .filter-grey {
@@ -250,7 +250,12 @@ body {
 .cl-formButtonPrimary:hover,
 .cl-formButtonPrimary:focus,
 .cl-formButtonPrimary:active {
-  background-color: #705CF7
+  background-color: #705cf7;
+}
+
+.cl-internal-1tpvhd8,
+.cl-internal-180wb59{
+  display: none !important;
 }
 
 /* ========================================== REACT-DATEPICKER STYLES */
