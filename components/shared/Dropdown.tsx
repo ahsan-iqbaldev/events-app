@@ -1,4 +1,4 @@
-import React, { startTransition, useState } from "react";
+import React, { startTransition, useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -18,36 +18,62 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "../ui/input";
+import { addCategory } from "@/store/slices/eventSlice";
+import { ThunkDispatch } from "@reduxjs/toolkit";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 type DropDownProps = {
   value?: string;
   onChangeHandler?: () => void;
+  existingCategory?: any;
 };
 
-const Dropdown = ({ value, onChangeHandler }: DropDownProps) => {
-  const [category, setCategory] = useState([
-    { id: "1", name: "Category 1" },
-    { id: "2", name: "Category 2" },
-    { id: "3", name: "Category 3" },
-  ]);
+const Dropdown = ({
+  value,
+  onChangeHandler,
+  existingCategory,
+}: DropDownProps) => {
+  console.log(existingCategory, "existingCategory");
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const { User } = useSelector((state: any) => state.auth);
+  const userId = User?.userId;
+  // const [category, setCategory] = useState(existingCategory);
+  // console.log(category, "category");
   const [newCategory, setNewCategory] = useState("");
 
-  const handleAddCategory = () => {};
+  const handleAddCategory = () => {
+    const payload = {
+      category: [newCategory],
+      userId,
+    };
+    dispatch(
+      addCategory({
+        payload,
+        onSuccess: () => {
+          toast.success("Category Added sucessfully");
+        },
+      })
+    );
+  };
 
+  // useEffect(() => {
+  //   setCategory(existingCategory);
+  // }, [onChangeHandler,existingCategory]);
   return (
     <Select onValueChange={onChangeHandler} defaultValue={value}>
       <SelectTrigger className="select-field">
         <SelectValue placeholder="Category" />
       </SelectTrigger>
       <SelectContent>
-        {category.length > 0 &&
-          category.map((category) => (
+        {existingCategory?.length > 0 &&
+          existingCategory?.map((category: any) => (
             <SelectItem
-              key={category?.id}
-              value={category?.id}
+              key={category}
+              value={category}
               className="select-item p-regular-14"
             >
-              {category?.name}
+              {category}
             </SelectItem>
           ))}
         <AlertDialog>
@@ -69,7 +95,9 @@ const Dropdown = ({ value, onChangeHandler }: DropDownProps) => {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={() => startTransition(handleAddCategory)}
+                onClick={() => {
+                  startTransition(handleAddCategory);
+                }}
               >
                 Add Category
               </AlertDialogAction>

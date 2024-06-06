@@ -3,9 +3,11 @@ import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authSlice from "./slices/authSlice";
+import eventSlice from "./slices/eventSlice";
 
 const reducers = combineReducers({
   auth: authSlice,
+  events: eventSlice
 });
 
 const persistConfig = {
