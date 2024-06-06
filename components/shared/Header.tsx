@@ -1,12 +1,20 @@
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+"use client";
+import { SignedIn, SignedOut, UserButton, useAuth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "../ui/button";
 import NavItems from "./NavItems";
 import MobileNav from "./MobileNav";
 
 const Header = () => {
+  const { isLoaded, isSignedIn } = useAuth();
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      localStorage.clear();
+      console.log("LocalStorage cleared on sign out.");
+    }
+  }, [isLoaded, isSignedIn]);
   return (
     <header className="w-full border-b">
       <div className="wrapper flex items-center justify-between">
