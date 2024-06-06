@@ -9,7 +9,6 @@ import {
   FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -19,19 +18,30 @@ import { eventDefaultValues } from "@/constants";
 import Dropdown from "./Dropdown";
 import { Textarea } from "../ui/textarea";
 import { FileUploader } from "./FileUploader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useDispatch, useSelector } from "react-redux";
+import { createEvent, getCategory } from "@/store/slices/eventSlice";
+import { ThunkDispatch } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type EventFormProps = {
-  userId: string;
   type: "Create" | "Update";
 };
 
-const EventForm = ({ userId, type }: EventFormProps) => {
+const EventForm = ({ type }: EventFormProps) => {
+  const router = useRouter();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const { User } = useSelector((state: any) => state.auth);
+  const userId = User?.userId;
+  const { loading } = useSelector((state: any) => state.events);
   const [files, setFiles] = useState<File[]>([]);
+  console.log(files);
+  const [category, setCategory] = useState([]);
   const initialValues = eventDefaultValues;
 
   const form = useForm<z.infer<typeof eventFormSchema>>({
@@ -39,9 +49,35 @@ const EventForm = ({ userId, type }: EventFormProps) => {
     defaultValues: initialValues,
   });
 
-  function onSubmit(values: z.infer<typeof eventFormSchema>) {
-    console.log(values);
+  function onSubmit(value: z.infer<typeof eventFormSchema>) {
+    const payload = {
+      ...value,
+      userId: userId,
+      email: User?.email,
+      imageUrl: files[0],
+    };
+    dispatch(
+      createEvent({
+        payload,
+        onSuccess: (res: any) => {
+          toast.success("Event create Sucessfully");
+          form.reset();
+          router.push(`/events/${res}`);
+        },
+      })
+    );
   }
+
+  useEffect(() => {
+    dispatch(
+      getCategory({
+        userId,
+        onSuccess: (res: any) => {
+          setCategory(res);
+        },
+      })
+    );
+  }, []);
 
   return (
     <Form {...form}>
@@ -75,6 +111,7 @@ const EventForm = ({ userId, type }: EventFormProps) => {
                   <Dropdown
                     onChangeHandler={field.onChange}
                     value={field.value}
+                    existingCategory={category}
                   />
                 </FormControl>
                 <FormMessage />
@@ -340,10 +377,10 @@ const EventForm = ({ userId, type }: EventFormProps) => {
         <Button
           type="submit"
           size="lg"
-          disabled={form.formState.isSubmitting}
+          disabled={loading}
           className="button col-span-2 w-full"
         >
-          {form.formState.isSubmitting ? "Submitting..." : `${type} Event `}
+          {loading ? "Submitting..." : `${type} Event `}
         </Button>
       </form>
     </Form>
