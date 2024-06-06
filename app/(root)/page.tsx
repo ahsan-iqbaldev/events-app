@@ -5,7 +5,6 @@ import Search from "@/components/shared/Search";
 import { SearchParamProps } from "@/types";
 
 export default async function Home({ searchParams }: SearchParamProps) {
-  // const dispatch = useDispatch()
 
   const page = Number(searchParams?.page) || 1;
   const searchText = (searchParams?.query as string) || "";

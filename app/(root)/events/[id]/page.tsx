@@ -1,15 +1,20 @@
+"use client";
 import CheckoutButton from "@/components/shared/CheckoutButton";
 import Collection from "@/components/shared/Collection";
-// import Collection from "@/components/shared/Collection";
-// import { getEventById, getRelatedEventsByCategory } from '@/lib/actions/event.actions'
 import { formatDateTime } from "@/lib/utils";
 import { SearchParamProps } from "@/types";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { ThunkDispatch } from "@reduxjs/toolkit";
+import { getEventDetails } from "@/store/slices/eventSlice";
+import { useParams } from "next/navigation";
 
-const EventDetails = async ({
-  params: { id },
-  searchParams,
-}: SearchParamProps) => {
+const EventDetails = () => {
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const { id }: any = useParams();
+  const { eventDetail } = useSelector((state: any) => state.events);
+  const [imageUrlBlob, setImageUrlBlob] = useState<string | null>(null);
   // const event = await getEventById(id);
 
   const event = {
@@ -21,18 +26,6 @@ const EventDetails = async ({
       _id: "73847827",
       name: "Collection 1",
     },
-    title: "Ahsaniqbal",
-    description:
-      "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    location: "Faisalabad",
-    imageUrl: "/assets/images/test.png",
-    startDateTime: "2024-06-04T22",
-    startEndTime: "2024-06-23T22",
-    categoryId: "2",
-    price: "300",
-    isFree: false,
-    url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-    _id:"9283840928203234"
   };
 
   // const relatedEvents = await getRelatedEventsByCategory({
@@ -41,101 +34,118 @@ const EventDetails = async ({
   //   page: searchParams.page as string,
   // });
 
-  const relatedEvents = {
-    data: [
-      {
-        organizer: {
-          _id:"92389489i239",
-          firstName: "Waseem",
-          lastName: "sajjad",
-        },
-        category: {
-          _id: "73847827",
-          name: "Collection 1",
-        },
-        title: "Ahsaniqbal",
-        description:
-          "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        location: "Faisalabad",
-        imageUrl: "/assets/images/test.png",
-        startDateTime: "2024-06-04T22",
-        startEndTime: "2024-06-23T22",
-        categoryId: "2",
-        price: "300",
-        isFree: false,
-        url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-        _id: "9283840928203234",
-      },
-      {
-        organizer: {
-          _id:"92389489i239",
-          firstName: "Waseem",
-          lastName: "sajjad",
-        },
-        category: {
-          _id: "73847827",
-          name: "Collection 1",
-        },
-        title: "Ahsaniqbal",
-        description:
-          "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        location: "Faisalabad",
-        imageUrl: "/assets/images/test.png",
-        startDateTime: "2024-06-04T22",
-        startEndTime: "2024-06-23T22",
-        categoryId: "2",
-        price: "300",
-        isFree: false,
-        url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-        _id: "9283840928203234",
-      },
-      {
-        organizer: {
-          _id:"92389489i239",
-          firstName: "Waseem",
-          lastName: "sajjad",
-        },
-        category: {
-          _id: "73847827",
-          name: "Collection 1",
-        },
-        title: "Ahsaniqbal",
-        description:
-          "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        location: "Faisalabad",
-        imageUrl: "/assets/images/test.png",
-        startDateTime: "2024-06-04T22",
-        startEndTime: "2024-06-23T22",
-        categoryId: "2",
-        price: "300",
-        isFree: false,
-        url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-        _id: "9283840928203234",
-      },
-    ],
-    totalPages: 1,
-  };
+  // const relatedEvents = {
+  //   data: [
+  //     {
+  //       organizer: {
+  //         _id: "92389489i239",
+  //         firstName: "Waseem",
+  //         lastName: "sajjad",
+  //       },
+  //       category: {
+  //         _id: "73847827",
+  //         name: "Collection 1",
+  //       },
+  //       title: "Ahsaniqbal",
+  //       description:
+  //         "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+  //       location: "Faisalabad",
+  //       imageUrl: "/assets/images/test.png",
+  //       startDateTime: "2024-06-04T22",
+  //       startEndTime: "2024-06-23T22",
+  //       categoryId: "2",
+  //       price: "300",
+  //       isFree: false,
+  //       url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
+  //       _id: "9283840928203234",
+  //     },
+  //     {
+  //       organizer: {
+  //         _id: "92389489i239",
+  //         firstName: "Waseem",
+  //         lastName: "sajjad",
+  //       },
+  //       category: {
+  //         _id: "73847827",
+  //         name: "Collection 1",
+  //       },
+  //       title: "Ahsaniqbal",
+  //       description:
+  //         "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+  //       location: "Faisalabad",
+  //       imageUrl: "/assets/images/test.png",
+  //       startDateTime: "2024-06-04T22",
+  //       startEndTime: "2024-06-23T22",
+  //       categoryId: "2",
+  //       price: "300",
+  //       isFree: false,
+  //       url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
+  //       _id: "9283840928203234",
+  //     },
+  //     {
+  //       organizer: {
+  //         _id: "92389489i239",
+  //         firstName: "Waseem",
+  //         lastName: "sajjad",
+  //       },
+  //       category: {
+  //         _id: "73847827",
+  //         name: "Collection 1",
+  //       },
+  //       title: "Ahsaniqbal",
+  //       description:
+  //         "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+  //       location: "Faisalabad",
+  //       imageUrl: "/assets/images/test.png",
+  //       startDateTime: "2024-06-04T22",
+  //       startEndTime: "2024-06-23T22",
+  //       categoryId: "2",
+  //       price: "300",
+  //       isFree: false,
+  //       url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
+  //       _id: "9283840928203234",
+  //     },
+  //   ],
+  //   totalPages: 1,
+  // };
+
+  useEffect(() => {
+    if (eventDetail?.imageUrl) {
+      fetch(eventDetail.imageUrl)
+        .then((res) => res.blob())
+        .then((blob) => {
+          const objectURL = URL.createObjectURL(blob);
+          setImageUrlBlob(objectURL);
+        });
+    }
+  }, [eventDetail]);
+
+  useEffect(() => {
+    dispatch(getEventDetails({ id, onSuccess: () => {} }));
+  }, []);
 
   return (
     <>
       <section className="flex justify-center bg-primary-50 bg-dotted-pattern bg-contain py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:max-w-7xl">
-          <Image
-            src={event.imageUrl}
-            alt="hero image"
-            width={1000}
-            height={1000}
-            className="h-full min-h-[300px] object-cover object-center"
-          />
+        {imageUrlBlob && (
+        <Image
+          src={imageUrlBlob}
+          alt="hero image"
+          width={1000}
+          height={1000}
+          className="h-full min-h-[300px] object-cover object-center"
+        />
+      )}
 
           <div className="flex w-full flex-col gap-8 p-5 md:p-10">
             <div className="flex flex-col gap-6">
-              <h2 className="h2-bold">{event.title}</h2>
+              <h2 className="h2-bold">{eventDetail?.title}</h2>
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <div className="flex gap-3">
                   <p className="p-bold-20 rounded-full bg-green-500/10 px-5 py-2 text-green-700">
-                    {event.isFree ? "FREE" : `$${event.price}`}
+                    {eventDetail?.isFree ? "FREE" : `$${eventDetail?.price}`}
                   </p>
                   <p className="p-medium-16 rounded-full bg-grey-500/10 px-4 py-2.5 text-grey-500">
                     {event.category.name}
@@ -151,7 +161,7 @@ const EventDetails = async ({
               </div>
             </div>
 
-            <CheckoutButton event={event} />
+            <CheckoutButton event={eventDetail} />
 
             <div className="flex flex-col gap-5">
               <div className="flex gap-2 md:gap-3">
@@ -163,14 +173,12 @@ const EventDetails = async ({
                 />
                 <div className="p-medium-16 lg:p-regular-20 flex flex-wrap items-center">
                   <p>
-                    {/* {formatDateTime(event.startDateTime).dateOnly} -{" "}
-                    {formatDateTime(event.startDateTime).timeOnly} */}
-                    {event.startDateTime} -{event.startDateTime}
+                    {formatDateTime(eventDetail?.startDateTime).dateOnly} -{" "}
+                    {formatDateTime(eventDetail?.startDateTime).timeOnly}
                   </p>
                   <p>
-                    {/* {formatDateTime(event.startEndTime).dateOnly} -{" "}
-                    {formatDateTime(event.startEndTime).timeOnly} */}
-                    {event.startDateTime} -{event.startDateTime}
+                    {formatDateTime(eventDetail?.startEndTime).dateOnly} -{" "}
+                    {formatDateTime(eventDetail?.startEndTime).timeOnly}
                   </p>
                 </div>
               </div>
@@ -182,15 +190,15 @@ const EventDetails = async ({
                   width={32}
                   height={32}
                 />
-                <p className="p-medium-16 lg:p-regular-20">{event.location}</p>
+                <p className="p-medium-16 lg:p-regular-20">{eventDetail?.location}</p>
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
               <p className="p-bold-20 text-grey-600">What You'll Learn:</p>
-              <p className="p-medium-16 lg:p-regular-18">{event.description}</p>
+              <p className="p-medium-16 lg:p-regular-18">{eventDetail?.description}</p>
               <p className="p-medium-16 lg:p-regular-18 truncate text-primary-500 underline">
-                {event.url}
+                {eventDetail?.url}
               </p>
             </div>
           </div>
@@ -201,7 +209,7 @@ const EventDetails = async ({
       <section className="wrapper my-8 flex flex-col gap-8 md:gap-12">
         <h2 className="h2-bold">Related Events</h2>
 
-        <Collection
+        {/* <Collection
           data={relatedEvents?.data}
           emptyTitle="No Events Found"
           emptyStateSubtext="Come back later"
@@ -209,7 +217,7 @@ const EventDetails = async ({
           limit={3}
           page={searchParams.page as string}
           totalPages={relatedEvents?.totalPages}
-        />
+        /> */}
       </section>
     </>
   );
