@@ -17,6 +17,8 @@ interface eventState {
   loading: boolean;
   error: any;
   eventDetail: any;
+  myEvents: any;
+  events: any;
 }
 interface getCategoryProps {
   userId: string;
@@ -41,10 +43,11 @@ export const createEvent = createAsyncThunk(
         .child(`Eventimages/${imageUrl.name}`);
       await storageRef.put(imageUrl);
       const downloadURL = await storageRef.getDownloadURL();
-
+      const createdAt = firebase.firestore.FieldValue.serverTimestamp();
       const finalPayload = {
         ...restPayload,
         imageUrl: downloadURL,
+        createdAt,
       };
 
       await firebase
@@ -146,8 +149,92 @@ export const getEventDetails = createAsyncThunk(
         .get();
 
       const eventDetail = eventReferrence?.data();
+      const userId = eventDetail?.userId;
+      const userDoc = await firebase
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .get();
+      const organizer = userDoc.data();
       onSuccess();
-      return eventDetail;
+      return { organizer, eventDetail };
+    } catch (err: any) {
+      console.log(err);
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const getEvents = createAsyncThunk(
+  "event/getEvents",
+  async (_, { rejectWithValue }) => {
+    try {
+      const eventReference = await firebase
+        .firestore()
+        .collection("events")
+        .get();
+
+      const events: any = await Promise.all(
+        eventReference.docs.map(async (doc) => {
+          const data = doc.data() as Omit<UserData, "id">;
+          const userId = data?.userId;
+
+          const userDoc = await firebase
+            .firestore()
+            .collection("users")
+            .doc(userId)
+            .get();
+          const userData = userDoc.data();
+
+          return {
+            id: doc.id,
+            ...data,
+            organizer: userData,
+          };
+        })
+      );
+
+      console.log(events, "events");
+      return events;
+    } catch (err: any) {
+      console.log(err);
+      return rejectWithValue(err.message);
+    }
+  }
+);
+export const getMyEvents = createAsyncThunk(
+  "event/getMyEvents",
+  async ({ userId }: any, { rejectWithValue }) => {
+    try {
+      const eventReference = await firebase
+        .firestore()
+        .collection("events")
+        .where("userId", "==", userId)
+        .get();
+
+        console.log(eventReference,'eventReference')
+
+      const myEvents: any = await Promise.all(
+        eventReference.docs.map(async (doc) => {
+          const data = doc.data() as Omit<UserData, "id">;
+          const UserId = data?.userId;
+
+          const userDoc = await firebase
+            .firestore()
+            .collection("users")
+            .doc(UserId)
+            .get();
+          const userData = userDoc.data();
+
+          return {
+            id: doc.id,
+            ...data,
+            organizer: userData,
+          };
+        })
+      );
+
+      return myEvents;
     } catch (err: any) {
       console.log(err);
       return rejectWithValue(err.message);
@@ -158,6 +245,8 @@ export const getEventDetails = createAsyncThunk(
 const initialState: eventState = {
   categories: null,
   eventDetail: null,
+  events: [],
+  myEvents: [],
   loading: false,
   error: null,
 };
@@ -206,6 +295,34 @@ const eventSlice = createSlice({
         state.eventDetail = action.payload;
       })
       .addCase(getEventDetails.rejected, (state, action) => {
+        console.log("Error");
+        state.loading = false;
+        state.error = action.error;
+      })
+      .addCase(getEvents.pending, (state) => {
+        console.log("Running");
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getEvents.fulfilled, (state, action) => {
+        state.loading = false;
+        state.events = action.payload;
+      })
+      .addCase(getEvents.rejected, (state, action) => {
+        console.log("Error");
+        state.loading = false;
+        state.error = action.error;
+      })
+      .addCase(getMyEvents.pending, (state) => {
+        console.log("Running");
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getMyEvents.fulfilled, (state, action) => {
+        state.loading = false;
+        state.myEvents = action.payload;
+      })
+      .addCase(getMyEvents.rejected, (state, action) => {
         console.log("Error");
         state.loading = false;
         state.error = action.error;
