@@ -1,10 +1,8 @@
 "use client";
 import CheckoutButton from "@/components/shared/CheckoutButton";
-import Collection from "@/components/shared/Collection";
 import { formatDateTime } from "@/lib/utils";
-import { SearchParamProps } from "@/types";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { getEventDetails } from "@/store/slices/eventSlice";
@@ -14,154 +12,48 @@ const EventDetails = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { id }: any = useParams();
   const { eventDetail } = useSelector((state: any) => state.events);
-  const [imageUrlBlob, setImageUrlBlob] = useState<string | null>(null);
-  // const event = await getEventById(id);
-
-  const event = {
-    organizer: {
-      firstName: "Waseem",
-      lastName: "sajjad",
-    },
-    category: {
-      _id: "73847827",
-      name: "Collection 1",
-    },
-  };
-
-  // const relatedEvents = await getRelatedEventsByCategory({
-  //   categoryId: event.category._id,
-  //   eventId: event._id,
-  //   page: searchParams.page as string,
-  // });
-
-  // const relatedEvents = {
-  //   data: [
-  //     {
-  //       organizer: {
-  //         _id: "92389489i239",
-  //         firstName: "Waseem",
-  //         lastName: "sajjad",
-  //       },
-  //       category: {
-  //         _id: "73847827",
-  //         name: "Collection 1",
-  //       },
-  //       title: "Ahsaniqbal",
-  //       description:
-  //         "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-  //       location: "Faisalabad",
-  //       imageUrl: "/assets/images/test.png",
-  //       startDateTime: "2024-06-04T22",
-  //       startEndTime: "2024-06-23T22",
-  //       categoryId: "2",
-  //       price: "300",
-  //       isFree: false,
-  //       url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-  //       _id: "9283840928203234",
-  //     },
-  //     {
-  //       organizer: {
-  //         _id: "92389489i239",
-  //         firstName: "Waseem",
-  //         lastName: "sajjad",
-  //       },
-  //       category: {
-  //         _id: "73847827",
-  //         name: "Collection 1",
-  //       },
-  //       title: "Ahsaniqbal",
-  //       description:
-  //         "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-  //       location: "Faisalabad",
-  //       imageUrl: "/assets/images/test.png",
-  //       startDateTime: "2024-06-04T22",
-  //       startEndTime: "2024-06-23T22",
-  //       categoryId: "2",
-  //       price: "300",
-  //       isFree: false,
-  //       url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-  //       _id: "9283840928203234",
-  //     },
-  //     {
-  //       organizer: {
-  //         _id: "92389489i239",
-  //         firstName: "Waseem",
-  //         lastName: "sajjad",
-  //       },
-  //       category: {
-  //         _id: "73847827",
-  //         name: "Collection 1",
-  //       },
-  //       title: "Ahsaniqbal",
-  //       description:
-  //         "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-  //       location: "Faisalabad",
-  //       imageUrl: "/assets/images/test.png",
-  //       startDateTime: "2024-06-04T22",
-  //       startEndTime: "2024-06-23T22",
-  //       categoryId: "2",
-  //       price: "300",
-  //       isFree: false,
-  //       url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-  //       _id: "9283840928203234",
-  //     },
-  //   ],
-  //   totalPages: 1,
-  // };
-
-  useEffect(() => {
-    if (eventDetail?.imageUrl) {
-      fetch(eventDetail.imageUrl)
-        .then((res) => res.blob())
-        .then((blob) => {
-          const objectURL = URL.createObjectURL(blob);
-          setImageUrlBlob(objectURL);
-        });
-    }
-  }, [eventDetail]);
 
   useEffect(() => {
     dispatch(getEventDetails({ id, onSuccess: () => {} }));
-  }, []);
+  }, [dispatch, id]);
 
   return (
     <>
       <section className="flex justify-center bg-primary-50 bg-dotted-pattern bg-contain py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:max-w-7xl">
-        {imageUrlBlob && (
-        <Image
-          src={imageUrlBlob}
-          alt="hero image"
-          width={1000}
-          height={1000}
-          className="h-full min-h-[300px] object-cover object-center"
-        />
-      )}
-
+          <img
+            src={eventDetail?.eventDetail?.imageUrl}
+            alt="hero image"
+            width={1000}
+            height={1000}
+            className="h-full min-h-[300px] object-cover object-center"
+          />
           <div className="flex w-full flex-col gap-8 p-5 md:p-10">
             <div className="flex flex-col gap-6">
-              <h2 className="h2-bold">{eventDetail?.title}</h2>
+              <h2 className="h2-bold">{eventDetail?.eventDetail?.title}</h2>
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <div className="flex gap-3">
                   <p className="p-bold-20 rounded-full bg-green-500/10 px-5 py-2 text-green-700">
-                    {eventDetail?.isFree ? "FREE" : `$${eventDetail?.price}`}
+                    {eventDetail?.eventDetail?.isFree
+                      ? "FREE"
+                      : `$${eventDetail?.eventDetail?.price}`}
                   </p>
                   <p className="p-medium-16 rounded-full bg-grey-500/10 px-4 py-2.5 text-grey-500">
-                    {event.category.name}
+                    {eventDetail?.eventDetail?.categoryId}
                   </p>
                 </div>
 
                 <p className="p-medium-18 ml-2 mt-2 sm:mt-0">
                   by{" "}
                   <span className="text-primary-500">
-                    {event.organizer.firstName} {event.organizer.lastName}
+                    @{eventDetail?.organizer?.userName}
                   </span>
                 </p>
               </div>
             </div>
 
-            <CheckoutButton event={eventDetail} />
+            <CheckoutButton event={eventDetail?.eventDetail} />
 
             <div className="flex flex-col gap-5">
               <div className="flex gap-2 md:gap-3">
@@ -173,12 +65,30 @@ const EventDetails = () => {
                 />
                 <div className="p-medium-16 lg:p-regular-20 flex flex-wrap items-center">
                   <p>
-                    {formatDateTime(eventDetail?.startDateTime).dateOnly} -{" "}
-                    {formatDateTime(eventDetail?.startDateTime).timeOnly}
+                    {
+                      formatDateTime(
+                        eventDetail?.eventDetail?.startDateTime?.nanoseconds
+                      ).dateOnly
+                    }{" "}
+                    -{" "}
+                    {
+                      formatDateTime(
+                        eventDetail?.eventDetail?.startDateTime?.nanoseconds
+                      ).timeOnly
+                    }
                   </p>
                   <p>
-                    {formatDateTime(eventDetail?.startEndTime).dateOnly} -{" "}
-                    {formatDateTime(eventDetail?.startEndTime).timeOnly}
+                    {
+                      formatDateTime(
+                        eventDetail?.eventDetail?.startEndTime?.nanoseconds
+                      ).dateOnly
+                    }{" "}
+                    -{" "}
+                    {
+                      formatDateTime(
+                        eventDetail?.eventDetail?.startEndTime?.nanoseconds
+                      ).timeOnly
+                    }
                   </p>
                 </div>
               </div>
@@ -190,16 +100,24 @@ const EventDetails = () => {
                   width={32}
                   height={32}
                 />
-                <p className="p-medium-16 lg:p-regular-20">{eventDetail?.location}</p>
+                <p className="p-medium-16 lg:p-regular-20">
+                  {eventDetail?.eventDetail?.location}
+                </p>
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
               <p className="p-bold-20 text-grey-600">What You'll Learn:</p>
-              <p className="p-medium-16 lg:p-regular-18">{eventDetail?.description}</p>
-              <p className="p-medium-16 lg:p-regular-18 truncate text-primary-500 underline">
-                {eventDetail?.url}
+              <p className="p-medium-16 lg:p-regular-18">
+                {eventDetail?.eventDetail?.description}
               </p>
+              <a
+                href={eventDetail?.eventDetail?.url}
+                target="_blank"
+                className="p-medium-16 lg:p-regular-18 truncate text-primary-500 underline cursor-pointer"
+              >
+                {eventDetail?.eventDetail?.url}
+              </a>
             </div>
           </div>
         </div>
