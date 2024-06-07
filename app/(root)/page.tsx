@@ -1,157 +1,167 @@
+"use client";
 import Banner from "@/components/shared/Banner";
 import CategoryFilter from "@/components/shared/CategoryFilter";
 import Collection from "@/components/shared/Collection";
 import Search from "@/components/shared/Search";
+import { getEvents } from "@/store/slices/eventSlice";
 import { SearchParamProps } from "@/types";
+import { ThunkDispatch } from "@reduxjs/toolkit";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-export default async function Home({ searchParams }: SearchParamProps) {
-
+export default  function Home({ searchParams }: SearchParamProps) {
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const { events } = useSelector((state: any) => state.events);
   const page = Number(searchParams?.page) || 1;
   const searchText = (searchParams?.query as string) || "";
   const category = (searchParams?.category as string) || "";
-  const events = {
-    data: [
-      {
-        organizer: {
-          _id: "92389489i239",
-          firstName: "Waseem",
-          lastName: "sajjad",
-        },
-        category: {
-          _id: "73847827",
-          name: "Collection 1",
-        },
-        title: "Ahsaniqbal",
-        description:
-          "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        location: "Faisalabad",
-        imageUrl: "/assets/images/test.png",
-        startDateTime: "2024-06-04T22",
-        startEndTime: "2024-06-23T22",
-        categoryId: "2",
-        price: "300",
-        isFree: false,
-        url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-        _id: "9283840928203234",
-      },
-      {
-        organizer: {
-          _id: "92389489i239",
-          firstName: "Waseem",
-          lastName: "sajjad",
-        },
-        category: {
-          _id: "73847827",
-          name: "Collection 1",
-        },
-        title: "Ahsaniqbal",
-        description:
-          "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        location: "Faisalabad",
-        imageUrl: "/assets/images/test.png",
-        startDateTime: "2024-06-04T22",
-        startEndTime: "2024-06-23T22",
-        categoryId: "2",
-        price: "300",
-        isFree: false,
-        url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-        _id: "9283840928203234",
-      },
-      {
-        organizer: {
-          _id: "92389489i239",
-          firstName: "Waseem",
-          lastName: "sajjad",
-        },
-        category: {
-          _id: "73847827",
-          name: "Collection 1",
-        },
-        title: "Ahsaniqbal",
-        description:
-          "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        location: "Faisalabad",
-        imageUrl: "/assets/images/test.png",
-        startDateTime: "2024-06-04T22",
-        startEndTime: "2024-06-23T22",
-        categoryId: "2",
-        price: "300",
-        isFree: false,
-        url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-        _id: "9283840928203234",
-      },
-      {
-        organizer: {
-          _id: "92389489i239",
-          firstName: "Waseem",
-          lastName: "sajjad",
-        },
-        category: {
-          _id: "73847827",
-          name: "Collection 1",
-        },
-        title: "Ahsaniqbal",
-        description:
-          "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        location: "Faisalabad",
-        imageUrl: "/assets/images/test.png",
-        startDateTime: "2024-06-04T22",
-        startEndTime: "2024-06-23T22",
-        categoryId: "2",
-        price: "300",
-        isFree: false,
-        url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-        _id: "9283840928203234",
-      },
-      {
-        organizer: {
-          _id: "92389489i239",
-          firstName: "Waseem",
-          lastName: "sajjad",
-        },
-        category: {
-          _id: "73847827",
-          name: "Collection 1",
-        },
-        title: "Ahsaniqbal",
-        description:
-          "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        location: "Faisalabad",
-        imageUrl: "/assets/images/test.png",
-        startDateTime: "2024-06-04T22",
-        startEndTime: "2024-06-23T22",
-        categoryId: "2",
-        price: "300",
-        isFree: false,
-        url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-        _id: "9283840928203234",
-      },
-      {
-        organizer: {
-          _id: "92389489i239",
-          firstName: "Waseem",
-          lastName: "sajjad",
-        },
-        category: {
-          _id: "73847827",
-          name: "Collection 1",
-        },
-        title: "Ahsaniqbal",
-        description:
-          "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        location: "Faisalabad",
-        imageUrl: "/assets/images/test.png",
-        startDateTime: "2024-06-04T22",
-        startEndTime: "2024-06-23T22",
-        categoryId: "2",
-        price: "300",
-        isFree: false,
-        url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
-        _id: "9283840928203234",
-      },
-    ],
-    totalPages: 2,
-  };
+  // const events = {
+  //   data: [
+  //     {
+  //       organizer: {
+  //         _id: "92389489i239",
+  //         firstName: "Waseem",
+  //         lastName: "sajjad",
+  //       },
+  //       category: {
+  //         _id: "73847827",
+  //         name: "Collection 1",
+  //       },
+  //       title: "Ahsaniqbal",
+  //       description:
+  //         "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+  //       location: "Faisalabad",
+  //       imageUrl: "/assets/images/test.png",
+  //       startDateTime: "2024-06-04T22",
+  //       startEndTime: "2024-06-23T22",
+  //       categoryId: "2",
+  //       price: "300",
+  //       isFree: false,
+  //       url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
+  //       _id: "9283840928203234",
+  //     },
+  //     {
+  //       organizer: {
+  //         _id: "92389489i239",
+  //         firstName: "Waseem",
+  //         lastName: "sajjad",
+  //       },
+  //       category: {
+  //         _id: "73847827",
+  //         name: "Collection 1",
+  //       },
+  //       title: "Ahsaniqbal",
+  //       description:
+  //         "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+  //       location: "Faisalabad",
+  //       imageUrl: "/assets/images/test.png",
+  //       startDateTime: "2024-06-04T22",
+  //       startEndTime: "2024-06-23T22",
+  //       categoryId: "2",
+  //       price: "300",
+  //       isFree: false,
+  //       url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
+  //       _id: "9283840928203234",
+  //     },
+  //     {
+  //       organizer: {
+  //         _id: "92389489i239",
+  //         firstName: "Waseem",
+  //         lastName: "sajjad",
+  //       },
+  //       category: {
+  //         _id: "73847827",
+  //         name: "Collection 1",
+  //       },
+  //       title: "Ahsaniqbal",
+  //       description:
+  //         "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+  //       location: "Faisalabad",
+  //       imageUrl: "/assets/images/test.png",
+  //       startDateTime: "2024-06-04T22",
+  //       startEndTime: "2024-06-23T22",
+  //       categoryId: "2",
+  //       price: "300",
+  //       isFree: false,
+  //       url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
+  //       _id: "9283840928203234",
+  //     },
+  //     {
+  //       organizer: {
+  //         _id: "92389489i239",
+  //         firstName: "Waseem",
+  //         lastName: "sajjad",
+  //       },
+  //       category: {
+  //         _id: "73847827",
+  //         name: "Collection 1",
+  //       },
+  //       title: "Ahsaniqbal",
+  //       description:
+  //         "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+  //       location: "Faisalabad",
+  //       imageUrl: "/assets/images/test.png",
+  //       startDateTime: "2024-06-04T22",
+  //       startEndTime: "2024-06-23T22",
+  //       categoryId: "2",
+  //       price: "300",
+  //       isFree: false,
+  //       url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
+  //       _id: "9283840928203234",
+  //     },
+  //     {
+  //       organizer: {
+  //         _id: "92389489i239",
+  //         firstName: "Waseem",
+  //         lastName: "sajjad",
+  //       },
+  //       category: {
+  //         _id: "73847827",
+  //         name: "Collection 1",
+  //       },
+  //       title: "Ahsaniqbal",
+  //       description:
+  //         "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+  //       location: "Faisalabad",
+  //       imageUrl: "/assets/images/test.png",
+  //       startDateTime: "2024-06-04T22",
+  //       startEndTime: "2024-06-23T22",
+  //       categoryId: "2",
+  //       price: "300",
+  //       isFree: false,
+  //       url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
+  //       _id: "9283840928203234",
+  //     },
+  //     {
+  //       organizer: {
+  //         _id: "92389489i239",
+  //         firstName: "Waseem",
+  //         lastName: "sajjad",
+  //       },
+  //       category: {
+  //         _id: "73847827",
+  //         name: "Collection 1",
+  //       },
+  //       title: "Ahsaniqbal",
+  //       description:
+  //         "simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+  //       location: "Faisalabad",
+  //       imageUrl: "/assets/images/test.png",
+  //       startDateTime: "2024-06-04T22",
+  //       startEndTime: "2024-06-23T22",
+  //       categoryId: "2",
+  //       price: "300",
+  //       isFree: false,
+  //       url: "http://localhost:3000/static/media/71YXzeOuslL._AC_UY879_.746b26761fd8addf8ad8.jpg",
+  //       _id: "9283840928203234",
+  //     },
+  //   ],
+  //   totalPages: 2,
+  // };
+
+  useEffect(() => {
+    dispatch(getEvents());
+  }, []);
 
   return (
     <>
@@ -173,13 +183,13 @@ export default async function Home({ searchParams }: SearchParamProps) {
         </div>
 
         <Collection
-          data={events?.data}
+          data={events}
           emptyTitle="No Events Found"
           emptyStateSubtext="Come back later"
           collectionType="All_Events"
           limit={6}
           page={page}
-          totalPages={events?.totalPages}
+          totalPages={1}
         />
       </section>
     </>
