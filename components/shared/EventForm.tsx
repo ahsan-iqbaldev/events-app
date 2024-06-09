@@ -93,7 +93,7 @@ const EventForm = ({ type }: EventFormProps) => {
               <FormItem className="w-full">
                 <FormControl>
                   <Input
-                    placeholder="Event Title"
+                    placeholder="Ticket Title"
                     {...field}
                     className="input-field"
                   />

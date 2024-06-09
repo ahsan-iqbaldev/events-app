@@ -1,5 +1,4 @@
-// import { IEvent } from '@/lib/database/models/event.model'
-import { formatDateTime } from "@/lib/utils";
+import moment from "moment";
 // import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
@@ -50,7 +49,9 @@ const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
         )}
 
         <p className="p-medium-16 p-medium-18 text-grey-500">
-          {formatDateTime(event?.startDateTime?.nanoseconds).dateTime}
+          {moment
+            .unix(event?.startDateTime?.seconds)
+            .format("DD-MMM-YYYY hh:mm A")}
         </p>
 
         <Link href={`/events/${event.id}`}>

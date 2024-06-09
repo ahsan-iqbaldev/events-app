@@ -52,7 +52,7 @@ export const createEvent = createAsyncThunk(
 
       await firebase
         .firestore()
-        .collection("events")
+        .collection("tickets")
         .add(finalPayload)
         .then((doc) => {
           console.log(doc, "docbythen");
@@ -144,7 +144,7 @@ export const getEventDetails = createAsyncThunk(
     try {
       const eventReferrence = await firebase
         .firestore()
-        .collection("events")
+        .collection("tickets")
         .doc(id)
         .get();
 
@@ -171,7 +171,7 @@ export const getEvents = createAsyncThunk(
     try {
       const eventReference = await firebase
         .firestore()
-        .collection("events")
+        .collection("tickets")
         .get();
 
       const events: any = await Promise.all(
@@ -208,7 +208,7 @@ export const getMyEvents = createAsyncThunk(
     try {
       const eventReference = await firebase
         .firestore()
-        .collection("events")
+        .collection("tickets")
         .where("userId", "==", userId)
         .get();
 

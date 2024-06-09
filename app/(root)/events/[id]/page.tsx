@@ -1,12 +1,12 @@
 "use client";
 import CheckoutButton from "@/components/shared/CheckoutButton";
-import { formatDateTime } from "@/lib/utils";
 import Image from "next/image";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { getEventDetails } from "@/store/slices/eventSlice";
 import { useParams } from "next/navigation";
+import moment from "moment";
 
 const EventDetails = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -65,30 +65,13 @@ const EventDetails = () => {
                 />
                 <div className="p-medium-16 lg:p-regular-20 flex flex-wrap items-center">
                   <p>
-                    {
-                      formatDateTime(
-                        eventDetail?.eventDetail?.startDateTime?.nanoseconds
-                      ).dateOnly
-                    }{" "}
-                    -{" "}
-                    {
-                      formatDateTime(
-                        eventDetail?.eventDetail?.startDateTime?.nanoseconds
-                      ).timeOnly
-                    }
-                  </p>
-                  <p>
-                    {
-                      formatDateTime(
-                        eventDetail?.eventDetail?.startEndTime?.nanoseconds
-                      ).dateOnly
-                    }{" "}
-                    -{" "}
-                    {
-                      formatDateTime(
-                        eventDetail?.eventDetail?.startEndTime?.nanoseconds
-                      ).timeOnly
-                    }
+                    {moment
+                      .unix(eventDetail?.eventDetail?.startDateTime?.seconds)
+                      .format("DD-MMM-YYYY hh:mm A")}{" "}
+                    &nbsp;/ &nbsp;
+                    {moment
+                      .unix(eventDetail?.eventDetail?.startEndTime?.seconds)
+                      .format("DD-MMM-YYYY hh:mm A")}
                   </p>
                 </div>
               </div>
@@ -107,7 +90,7 @@ const EventDetails = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="p-bold-20 text-grey-600">What You'll Learn:</p>
+              <p className="p-bold-20 text-grey-600">What About this Event:</p>
               <p className="p-medium-16 lg:p-regular-18">
                 {eventDetail?.eventDetail?.description}
               </p>
@@ -125,11 +108,11 @@ const EventDetails = () => {
 
       {/* EVENTS with the same category */}
       <section className="wrapper my-8 flex flex-col gap-8 md:gap-12">
-        <h2 className="h2-bold">Related Events</h2>
+        <h2 className="h2-bold">Related Tickets</h2>
 
         {/* <Collection
           data={relatedEvents?.data}
-          emptyTitle="No Events Found"
+          emptyTitle="No Tickets Found"
           emptyStateSubtext="Come back later"
           collectionType="All_Events"
           limit={3}
