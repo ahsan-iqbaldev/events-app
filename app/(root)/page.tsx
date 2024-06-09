@@ -3,15 +3,18 @@ import Banner from "@/components/shared/Banner";
 import CategoryFilter from "@/components/shared/CategoryFilter";
 import Collection from "@/components/shared/Collection";
 import Search from "@/components/shared/Search";
-import { getEvents } from "@/store/slices/eventSlice";
+import { getCategory, getEvents } from "@/store/slices/eventSlice";
 import { SearchParamProps } from "@/types";
 import { ThunkDispatch } from "@reduxjs/toolkit";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default  function Home({ searchParams }: SearchParamProps) {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const { User } = useSelector((state: any) => state.auth);
+  const userId = User?.userId;
   const { events } = useSelector((state: any) => state.events);
+  const [categorys, setCategory] = useState([]);
   const page = Number(searchParams?.page) || 1;
   const searchText = (searchParams?.query as string) || "";
   const category = (searchParams?.category as string) || "";
@@ -159,8 +162,17 @@ export default  function Home({ searchParams }: SearchParamProps) {
   //   totalPages: 2,
   // };
 
+
   useEffect(() => {
     dispatch(getEvents());
+    dispatch(
+      getCategory({
+        userId,
+        onSuccess: (res: any) => {
+          setCategory(res);
+        },
+      })
+    );
   }, []);
 
   return (
@@ -179,7 +191,7 @@ export default  function Home({ searchParams }: SearchParamProps) {
 
         <div className="flex w-full flex-col gap-5 md:flex-row">
           <Search />
-          <CategoryFilter />
+          <CategoryFilter existingCategory={categorys} />
         </div>
 
         <Collection
