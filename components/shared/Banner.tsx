@@ -54,11 +54,12 @@ const Banner = () => {
       <div className="wrapper grid grid-cols-1 gap-5 md:grid-cols-2 2xl:gap-0">
         <div className="flex flex-col justify-center gap-8">
           <h1 className="h1-bold">
-            Host,Connext Celebrate: your Events, Our Platform!
+            {/* Host,Connext Celebrate: your Events, Our Platform! */}
+            Host, Your Events starts with a Ticketly. Creating moments!,
           </h1>
           <p className="p-regular-20 md:p-regular-24">
-            Book and learn helpfull tips from 3,168+ mentors in world-class
-            companies with our global community
+            Join our platform to reserve your Tickets and get ready to enjoy
+            your Events.
           </p>
           <Button className="button w-full sm:w-fit" size="lg" asChild>
             <Link href="#events">Explore Now</Link>
