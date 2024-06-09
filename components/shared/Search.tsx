@@ -5,8 +5,12 @@ import { useEffect, useState } from 'react'
 import { Input } from '../ui/input';
 import { formUrlQuery, removeKeysFromQuery } from '@/lib/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { getSearchEvents } from '@/store/slices/eventSlice';
+import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from '@reduxjs/toolkit';
 
 const Search = ({ placeholder = 'Search title...' }: { placeholder?: string }) => {
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const [query, setQuery] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -31,8 +35,12 @@ const Search = ({ placeholder = 'Search title...' }: { placeholder?: string }) =
       router.push(newUrl, { scroll: false });
     }, 300)
 
+    dispatch(getSearchEvents({query}));
+
+    console.log(query,'query') 
+
     return () => clearTimeout(delayDebounceFn);
-  }, [query, searchParams, router])
+  }, [query])
 
   return (
     <div className="flex-center min-h-[54px] w-full overflow-hidden rounded-full bg-grey-50 px-4 py-2">

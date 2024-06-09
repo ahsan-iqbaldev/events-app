@@ -142,6 +142,7 @@ export const getEventDetails = createAsyncThunk(
   "event/getEventDetails",
   async ({ id, onSuccess }: getEventDetailsProps, { rejectWithValue }) => {
     try {
+      console.log("callgetEventDetails")
       const eventReferrence = await firebase
         .firestore()
         .collection("tickets")
@@ -156,7 +157,7 @@ export const getEventDetails = createAsyncThunk(
         .doc(userId)
         .get();
       const organizer = userDoc.data();
-      onSuccess();
+      onSuccess(eventDetail);
       return { organizer, eventDetail };
     } catch (err: any) {
       console.log(err);
@@ -202,6 +203,95 @@ export const getEvents = createAsyncThunk(
     }
   }
 );
+
+export const getCategoryEvents = createAsyncThunk(
+  "event/getCategoryEvents",
+  async ({ category }: any, { rejectWithValue }) => {
+    try {
+      let eventReference;
+      if (category == "All") {
+        eventReference = await firebase.firestore().collection("tickets").get();
+      } else {
+        eventReference = await firebase
+          .firestore()
+          .collection("tickets")
+          .where("categoryId", "==", category)
+          .get();
+      }
+
+      const events: any = await Promise.all(
+        eventReference.docs.map(async (doc) => {
+          const data = doc.data() as Omit<UserData, "id">;
+          const userId = data?.userId;
+
+          const userDoc = await firebase
+            .firestore()
+            .collection("users")
+            .doc(userId)
+            .get();
+          const userData = userDoc.data();
+
+          return {
+            id: doc.id,
+            ...data,
+            organizer: userData,
+          };
+        })
+      );
+
+      console.log(events, "events");
+      return events;
+    } catch (err: any) {
+      console.log(err);
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const getSearchEvents = createAsyncThunk(
+  "event/getSearchEvents",
+  async ({ query }: any, { rejectWithValue }) => {
+    try {
+      let eventReference;
+      if (query == "") {
+        eventReference = await firebase.firestore().collection("tickets").get();
+      } else {
+        eventReference = await firebase
+          .firestore()
+          .collection("tickets")
+          .where("title", "==", query)
+          .get();
+      }
+
+      const events: any = await Promise.all(
+        eventReference.docs.map(async (doc) => {
+          const data = doc.data() as Omit<UserData, "id">;
+          const userId = data?.userId;
+
+          const userDoc = await firebase
+            .firestore()
+            .collection("users")
+            .doc(userId)
+            .get();
+          const userData = userDoc.data();
+
+          return {
+            id: doc.id,
+            ...data,
+            organizer: userData,
+          };
+        })
+      );
+
+      console.log(events, "events");
+      return events;
+    } catch (err: any) {
+      console.log(err);
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 export const getMyEvents = createAsyncThunk(
   "event/getMyEvents",
   async ({ userId }: any, { rejectWithValue }) => {
@@ -212,7 +302,7 @@ export const getMyEvents = createAsyncThunk(
         .where("userId", "==", userId)
         .get();
 
-        console.log(eventReference,'eventReference')
+      console.log(eventReference, "eventReference");
 
       const myEvents: any = await Promise.all(
         eventReference.docs.map(async (doc) => {
@@ -309,6 +399,34 @@ const eventSlice = createSlice({
         state.events = action.payload;
       })
       .addCase(getEvents.rejected, (state, action) => {
+        console.log("Error");
+        state.loading = false;
+        state.error = action.error;
+      })
+      .addCase(getCategoryEvents.pending, (state) => {
+        console.log("Running");
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getCategoryEvents.fulfilled, (state, action) => {
+        state.loading = false;
+        state.events = action.payload;
+      })
+      .addCase(getCategoryEvents.rejected, (state, action) => {
+        console.log("Error");
+        state.loading = false;
+        state.error = action.error;
+      })
+      .addCase(getSearchEvents.pending, (state) => {
+        console.log("Running");
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getSearchEvents.fulfilled, (state, action) => {
+        state.loading = false;
+        state.events = action.payload;
+      })
+      .addCase(getSearchEvents.rejected, (state, action) => {
         console.log("Error");
         state.loading = false;
         state.error = action.error;
