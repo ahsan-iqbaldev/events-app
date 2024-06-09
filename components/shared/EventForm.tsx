@@ -24,25 +24,31 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useDispatch, useSelector } from "react-redux";
-import { createEvent, getCategory } from "@/store/slices/eventSlice";
+import {
+  createEvent,
+  getCategory,
+  getEventDetails,
+} from "@/store/slices/eventSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type EventFormProps = {
   type: "Create" | "Update";
+  eventData: any;
 };
 
-const EventForm = ({ type }: EventFormProps) => {
+const EventForm = ({ type, eventData }: EventFormProps) => {
+  console.log(eventData, "eventData");
   const router = useRouter();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { User } = useSelector((state: any) => state.auth);
   const userId = User?.userId;
   const { loading } = useSelector((state: any) => state.events);
   const [files, setFiles] = useState<File[]>([]);
-  console.log(files);
   const [category, setCategory] = useState([]);
-  const initialValues = eventDefaultValues;
+  const initialValues =
+    eventData && type === "Update" ? eventData : eventDefaultValues;
 
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
@@ -102,6 +108,7 @@ const EventForm = ({ type }: EventFormProps) => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="categoryId"
@@ -244,58 +251,6 @@ const EventForm = ({ type }: EventFormProps) => {
             )}
           />
         </div>
-
-        {/* <div className="flex flex-col gap-5 md:flex-row">
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormControl>
-                  <div className="flex-center h-[54px] w-full overflow-hidden rounded-full bg-grey-50 px-4 py-2">
-                    <Image
-                      src="/assets/icons/dollar.svg"
-                      alt="dollar"
-                      width={24}
-                      height={24}
-                      className="filter-grey"
-                    />
-                    <Input
-                      type="number"
-                      placeholder="Price"
-                      {...field}
-                      className="p-regular-16 border-0 bg-grey-50 outline-offset-0 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                    />
-                    <FormField
-                      control={form.control}
-                      name="isFree"
-                      render={({ field }) => (
-                        <FormItem className="w-full">
-                          <FormControl>
-                            <div className="flex items-center">
-                              <label
-                                htmlFor="isFree"
-                                className="whitespace-nowrap pr-3 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                              >
-                                Free Ticket
-                              </label>
-                              <Checkbox
-                                id="isFree"
-                                className="mr-1 h-5 w-5 border-2 border-primary-500"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div> */}
         <div className="flex flex-col gap-5 md:flex-row">
           <FormField
             control={form.control}

@@ -1,7 +1,26 @@
+"use client";
+
 import EventForm from "@/components/shared/EventForm";
-import React from "react";
+import { getEventDetails } from "@/store/slices/eventSlice";
+import { ThunkDispatch } from "@reduxjs/toolkit";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 const UpdateEvent = () => {
+  const { id }: any = useParams();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const [eventData, setEventData] = useState(null);
+  useEffect(() => {
+    dispatch(
+      getEventDetails({
+        id,
+        onSuccess: (res: any) => {
+          setEventData(res);
+        },
+      })
+    );
+  }, [id, dispatch]);
 
   return (
     <>
@@ -12,7 +31,7 @@ const UpdateEvent = () => {
       </section>
 
       <div className="wrapper my-8">
-        <EventForm type="Update" />
+        <EventForm type="Update" eventData={eventData} />
       </div>
     </>
   );
