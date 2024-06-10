@@ -6,9 +6,15 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
 import Checkout from "./Checkout";
+import { useSelector } from "react-redux";
 
 const CheckoutButton = ({ event }: { event: any }) => {
   console.log(event, "chekcutevent");
+  // const {userIdTects}=useSelector(state)
+  const { User } = useSelector((state: any) => state.auth);
+  const ID = User?.userId;
+  const Creater = event?.userId == ID;
+
   const { user } = useUser();
   const userId = user?.publicMetadata.userId as string;
   const eventEndTime = new Date(event?.startEndTime?.seconds * 1000);
@@ -23,13 +29,16 @@ const CheckoutButton = ({ event }: { event: any }) => {
       ) : (
         <>
           <SignedOut>
-            <Button asChild className="button rounded-full" size="lg">
+            <Button asChild className="button rounded-full " size="lg">
               <Link href="/sign-in">Get Tickets</Link>
             </Button>
           </SignedOut>
 
           <SignedIn>
-            <Checkout event={event} userId={userId} />
+            {Creater ?"": <Checkout event={event} userId={userId}/>
+         
+            }
+        
           </SignedIn>
         </>
       )}
