@@ -8,9 +8,11 @@ import { Button } from "../ui/button";
 import Checkout from "./Checkout";
 
 const CheckoutButton = ({ event }: { event: any }) => {
+  console.log(event, "chekcutevent");
   const { user } = useUser();
   const userId = user?.publicMetadata.userId as string;
-  const hasEventFinished = new Date(event?.startEndTime) < new Date();
+  const eventEndTime = new Date(event?.startEndTime?.seconds * 1000);
+  const hasEventFinished = eventEndTime < new Date();
 
   return (
     <div className="flex items-center gap-3">
