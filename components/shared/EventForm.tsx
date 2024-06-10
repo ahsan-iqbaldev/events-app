@@ -47,8 +47,21 @@ const EventForm = ({ type, eventData }: EventFormProps) => {
   const { loading } = useSelector((state: any) => state.events);
   const [files, setFiles] = useState<File[]>([]);
   const [category, setCategory] = useState([]);
+  const eventExistingData = {
+    title: eventData?.title,
+    description: eventData?.description,
+    location: eventData?.location,
+    imageUrl: eventData?.imageUrl,
+    startDateTime: eventData?.startDateTime,
+    endDateTime: eventData?.startEndTime,
+    categoryId: eventData?.categoryId,
+    price: eventData?.price,
+    isFree: eventData?.isFree,
+    url: eventData?.url,
+  };
+  console.log(eventExistingData, "eventExistingData");
   const initialValues =
-    eventData && type === "Update" ? eventData : eventDefaultValues;
+    eventData && type === "Update" ? eventExistingData : eventDefaultValues;
 
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),

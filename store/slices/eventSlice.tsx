@@ -207,6 +207,7 @@ export const getEvents = createAsyncThunk(
 export const getCategoryEvents = createAsyncThunk(
   "event/getCategoryEvents",
   async ({ category }: any, { rejectWithValue }) => {
+    console.log(category,'category')
     try {
       let eventReference;
       if (category == "All") {
