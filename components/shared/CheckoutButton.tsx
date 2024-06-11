@@ -3,22 +3,34 @@
 // import { IEvent } from '@/lib/database/models/event.model'
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import Checkout from "./Checkout";
 import { useSelector } from "react-redux";
+// import CashDeliverModal from "./CashDeliverModal";
 
 const CheckoutButton = ({ event }: { event: any }) => {
   console.log(event, "chekcutevent");
-  // const {userIdTects}=useSelector(state)
   const { User } = useSelector((state: any) => state.auth);
+
   const ID = User?.userId;
   const Creater = event?.userId == ID;
-
   const { user } = useUser();
   const userId = user?.publicMetadata.userId as string;
   const eventEndTime = new Date(event?.startEndTime?.seconds * 1000);
   const hasEventFinished = eventEndTime < new Date();
+
+
+
+  //modal functaionality
+  // const [isOpen, setIsOpen] = useState(false);
+  // const openModal = () => {
+  //   console.log('openModal: ', openModal);
+  //   setIsOpen(true);
+  // };
+  // const closeModal = () => {
+  //   setIsOpen(false);
+  // };
 
   return (
     <div className="flex items-center gap-3">
@@ -29,19 +41,20 @@ const CheckoutButton = ({ event }: { event: any }) => {
       ) : (
         <>
           <SignedOut>
-            <Button asChild className="button rounded-full " size="lg">
-              <Link href="/sign-in">Get Tickets</Link>
+            <Button className="button rounded-full " size="lg" >
+            
+              <Link href="/sign-in" >
+                Get Tickets
+              </Link>
             </Button>
           </SignedOut>
 
           <SignedIn>
-            {Creater ?"": <Checkout event={event} userId={userId}/>
-         
-            }
-        
+            {Creater ? "" : <Checkout event={event} userId={userId} />}
           </SignedIn>
         </>
       )}
+     
     </div>
   );
 };

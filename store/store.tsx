@@ -4,10 +4,12 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authSlice from "./slices/authSlice";
 import eventSlice from "./slices/eventSlice";
+import orderSlice from "./slices/orderSlice";
 
 const reducers = combineReducers({
   auth: authSlice,
-  events: eventSlice
+  events: eventSlice,
+  orders: orderSlice,
 });
 
 const persistConfig = {
