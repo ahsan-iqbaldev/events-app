@@ -280,3 +280,71 @@ body {
 .react-datepicker__time-list-item--selected {
   background-color: #624cf5 !important;
 }
+
+.form-control {
+  display: block;
+  width: 100%;
+  outline: none;
+  height: calc(1.5em + 1.25rem + 2px);
+  padding: 1.4rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #8898aa;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #cad1d7;
+  border-radius: 0.375rem;
+  box-shadow: none;
+  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.form-control-select {
+  display: block;
+  width: 100%;
+  outline: none;
+  height: calc(1.5em + 1.5rem + 2px);
+  padding: 0.7rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #8898aa;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #cad1d7;
+  border-radius: 0.375rem;
+  box-shadow: none;
+  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.form-control-method {
+  position: relative;
+  height: calc(1.5em + 1.5rem + 2px);
+  padding: 0.6rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #8898aa;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #cad1d7;
+  border-radius: 0.375rem;
+  box-shadow: none;
+  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.form-control-method::before {
+  content: "";
+  position: absolute;
+  top: 45%;
+  left: 10px;
+  transform: translateY(-50%);
+  width: 13px;
+  height: 13px;
+  background-color: black;
+  border-radius: 50%;
+}
+.priceCard {
+  background: #f7f7f7;
+  border-radius: 10px;
+  padding: 12px;
+}
