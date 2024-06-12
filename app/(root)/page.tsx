@@ -9,12 +9,13 @@ import { ThunkDispatch } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export default  function Home({ searchParams }: SearchParamProps) {
+export default function Home({ searchParams }: SearchParamProps) {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { User } = useSelector((state: any) => state.auth);
   const userId = User?.userId;
   const { events } = useSelector((state: any) => state.events);
-  const [categorys, setCategory] = useState([]);
+  const [categorys, setCategory] = useState(null);
+  console.log(categorys, "categorys");
   const page = Number(searchParams?.page) || 1;
   const searchText = (searchParams?.query as string) || "";
   const category = (searchParams?.category as string) || "";
@@ -162,18 +163,32 @@ export default  function Home({ searchParams }: SearchParamProps) {
   //   totalPages: 2,
   // };
 
-
   useEffect(() => {
     dispatch(getEvents());
-    dispatch(
-      getCategory({
-        userId,
-        onSuccess: (res: any) => {
-          setCategory(res);
-        },
-      })
-    );
+    if (userId) {
+      dispatch(
+        getCategory({
+          userId,
+          onSuccess: (res: any) => {
+            setCategory(res);
+          },
+        })
+      );
+    }
   }, []);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(
+        getCategory({
+          userId,
+          onSuccess: (res: any) => {
+            setCategory(res);
+          },
+        })
+      );
+    }
+  }, [userId]);
 
   return (
     <>

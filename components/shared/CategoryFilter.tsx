@@ -28,19 +28,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { addCategory, getCategoryEvents } from "@/store/slices/eventSlice";
 import { toast } from "react-toastify";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 const CategoryFilter = ({ existingCategory }: any) => {
+  let arr;
+  if (!existingCategory) {
+    arr = ["cricket", "football", "transport"];
+  } else {
+    arr = existingCategory;
+  }
+  console.log(arr, "arrarr");
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { User } = useSelector((state: any) => state.auth);
+  const { user } = useUser();
   const userId = User?.userId;
+  const ID = user?.id;
   const [newCategory, setNewCategory] = useState("");
-  const [categories, setCategories] = useState<any[]>(existingCategory);
+  // const [categories, setCategories] = useState<any[]>(arr);
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    setCategories(existingCategory);
-  }, [existingCategory]);
+  // useEffect(() => {
+  //   setCategories(arr);
+  // }, [arr]);
 
   const onSelectCategory = (category: string) => {
     let newUrl = "";
@@ -59,10 +69,13 @@ const CategoryFilter = ({ existingCategory }: any) => {
     }
 
     router.push(newUrl, { scroll: false });
-    dispatch(getCategoryEvents({category}));
+    dispatch(getCategoryEvents({ category }));
   };
 
   const handleAddCategory = () => {
+    if (!ID) {
+      return router.push("/signin");
+    }
     const payload = {
       category: [newCategory],
       userId,
@@ -87,7 +100,7 @@ const CategoryFilter = ({ existingCategory }: any) => {
           All
         </SelectItem>
 
-        {categories.map((category) => (
+        {arr?.map((category: any) => (
           <SelectItem
             value={category}
             key={category}
