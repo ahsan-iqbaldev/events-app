@@ -1,7 +1,6 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { countries } from "../../context/index";
-import { useDispatch } from "react-redux";
-// import { addOrder } from "../store/actions/productsAction";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useParams } from "next/navigation";
 import { addOrder } from "@/store/slices/orderSlice";
@@ -27,6 +26,7 @@ interface FormData {
   cityOptions?: string[];
   curLocation?: string;
   customCity?: string;
+  userId?: string;
 }
 
 const CashOnDeliveryModal: React.FC<CashOnDeliveryModalProps> = ({
@@ -37,6 +37,9 @@ const CashOnDeliveryModal: React.FC<CashOnDeliveryModalProps> = ({
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { id } = useParams<{ id: string }>();
 
+  const { User } = useSelector((state: any) => state.auth);
+  const userId = User?.userId;
+  
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -48,19 +51,24 @@ const CashOnDeliveryModal: React.FC<CashOnDeliveryModalProps> = ({
     address: "",
     productId: id,
     price: storeProductData?.price,
+    userId: userId || "",
   });
+
+  useEffect(() => {
+    if (userId) {
+      setFormData((prevData) => ({ ...prevData, userId }));
+    }
+  }, [userId]);
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
       curLocation: currentCity,
     }));
-
     if (name === "selectedState") {
       const cityOptions = countries[value];
       setFormData((prevData) => ({
@@ -73,18 +81,16 @@ const CashOnDeliveryModal: React.FC<CashOnDeliveryModalProps> = ({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Current City:", currentCity);
-    console.log("FormData before submission:", formData);
     dispatch(
       addOrder({
         formData,
+        userId,
         onSuccess: () => {
           onClose();
           toast.success("Your order has been submitted successfully");
         },
       })
     );
-    console.log(formData, "formData");
   };
 
   return (

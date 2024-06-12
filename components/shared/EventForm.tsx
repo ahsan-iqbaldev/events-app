@@ -44,6 +44,7 @@ const EventForm = ({ type, eventData }: EventFormProps) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { User } = useSelector((state: any) => state.auth);
   const userId = User?.userId;
+  console.log('userId: ', userId);
   const { loading } = useSelector((state: any) => state.events);
   const [files, setFiles] = useState<File[]>([]);
   const [category, setCategory] = useState([]);

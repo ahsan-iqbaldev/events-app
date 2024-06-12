@@ -28,11 +28,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { addCategory, getCategoryEvents } from "@/store/slices/eventSlice";
 import { toast } from "react-toastify";
+import { useUser } from "@clerk/nextjs";
 
 const CategoryFilter = ({ existingCategory }: any) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const { User } = useSelector((state: any) => state.auth);
-  const userId = User?.userId;
+  const { user } = useUser();
+  const userId = user?.id;
   const [newCategory, setNewCategory] = useState("");
   const [categories, setCategories] = useState<any[]>(existingCategory);
   const router = useRouter();
@@ -63,6 +64,9 @@ const CategoryFilter = ({ existingCategory }: any) => {
   };
 
   const handleAddCategory = () => {
+    if (!userId) {
+      return router.push("/signin");
+    }
     const payload = {
       category: [newCategory],
       userId,
@@ -86,6 +90,7 @@ const CategoryFilter = ({ existingCategory }: any) => {
         <SelectItem value="All" className="select-item p-regular-14">
           All
         </SelectItem>
+        
 
         {categories.map((category) => (
           <SelectItem
