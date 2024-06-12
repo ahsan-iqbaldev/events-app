@@ -16,13 +16,15 @@ const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
   const { User } = useSelector((state: any) => state.auth);
   const userId = User?.userId;
 
-  const isEventCreator = userId === event?.userId
+  const isEventCreator = userId === event?.userId;
 
   return (
     <div className="group relative flex min-h-[380px] w-full max-w-[400px] flex-col overflow-hidden rounded-xl bg-white shadow-md transition-all hover:shadow-lg md:min-h-[438px]">
       <Link
         href={`/events/${event?.id}`}
-        style={{ backgroundImage: `url(${event?.imageUrl})` }}
+        style={{
+          backgroundImage: `url(${event?.imageUrl || event?.ticket?.imageUrl})`,
+        }}
         className="flex-center flex-grow bg-gray-50 bg-cover bg-center text-grey-500"
       />
 
@@ -53,7 +55,7 @@ const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
 
         <p className="p-medium-16 p-medium-18 text-grey-500">
           {moment
-            .unix(event?.startDateTime?.seconds)
+            .unix(event?.startDateTime?.seconds || event?.createdAt?.seconds)
             .format("DD-MMM-YYYY hh:mm A")}
         </p>
 

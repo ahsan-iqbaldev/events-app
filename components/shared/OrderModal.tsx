@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useParams } from "next/navigation";
 import { addOrder } from "@/store/slices/orderSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
+import { useUser } from "@clerk/nextjs";
 
 interface CashOnDeliveryModalProps {
   onClose: () => void;
@@ -29,6 +30,8 @@ interface FormData {
   cityOptions?: string[];
   curLocation?: string;
   customCity?: string;
+  userId?: string;
+  createdBy?: string;
 }
 const OrderModal: React.FC<CashOnDeliveryModalProps> = ({
   onClose,
@@ -37,6 +40,8 @@ const OrderModal: React.FC<CashOnDeliveryModalProps> = ({
 }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { id } = useParams<{ id: string }>();
+  const { user } = useUser();
+  const userId = user?.id;
 
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
@@ -49,6 +54,8 @@ const OrderModal: React.FC<CashOnDeliveryModalProps> = ({
     address: "",
     productId: id,
     price: storeProductData?.price,
+    createdBy: storeProductData?.userId,
+    userId,
   });
 
   const handleInputChange = (
@@ -76,6 +83,7 @@ const OrderModal: React.FC<CashOnDeliveryModalProps> = ({
     e.preventDefault();
     console.log("Current City:", currentCity);
     console.log("FormData before submission:", formData);
+    delete formData?.cityOptions
     dispatch(
       addOrder({
         formData,
