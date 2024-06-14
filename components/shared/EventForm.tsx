@@ -28,6 +28,7 @@ import {
   createEvent,
   getCategory,
   getEventDetails,
+  udpateEvent,
 } from "@/store/slices/eventSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
@@ -40,6 +41,7 @@ type EventFormProps = {
 
 const EventForm = ({ type, eventData }: EventFormProps) => {
   console.log(eventData, "eventData");
+  const { id } = useParams();
   const router = useRouter();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { User } = useSelector((state: any) => state.auth);
@@ -47,26 +49,27 @@ const EventForm = ({ type, eventData }: EventFormProps) => {
   const { loading } = useSelector((state: any) => state.events);
   const [files, setFiles] = useState<File[]>([]);
   const [category, setCategory] = useState([]);
-  const eventExistingData = {
-    title: eventData?.title,
-    description: eventData?.description,
-    location: eventData?.location,
-    imageUrl: eventData?.imageUrl,
-    startDateTime: eventData?.startDateTime,
-    endDateTime: eventData?.startEndTime,
-    categoryId: eventData?.categoryId,
-    price: eventData?.price,
-    isFree: eventData?.isFree,
-    url: eventData?.url,
-  };
-  console.log(eventExistingData, "eventExistingData");
-  const initialValues =
-    eventData && type === "Update" ? eventExistingData : eventDefaultValues;
+
+  const defaultValues = type === "Update" ? eventData : eventDefaultValues;
+
+  console.log(defaultValues, "initialValues");
 
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
-    defaultValues: initialValues,
+    defaultValues: defaultValues,
   });
+  // if (type == "Update") {
+  form.setValue("title", eventData?.title);
+  form.setValue("description", eventData?.description);
+  form.setValue("location", eventData?.location);
+  form.setValue("imageUrl", eventData?.imageUrl);
+  form.setValue("startDateTime", new Date());
+  form.setValue("startEndTime", new Date());
+  form.setValue("categoryId", eventData?.categoryId);
+  form.setValue("price", eventData?.price);
+  form.setValue("isFree", eventData?.isFree);
+  form.setValue("url", eventData?.url);
+  // }
 
   function onSubmit(value: z.infer<typeof eventFormSchema>) {
     const payload = {
@@ -75,16 +78,30 @@ const EventForm = ({ type, eventData }: EventFormProps) => {
       email: User?.email,
       imageUrl: files[0],
     };
-    dispatch(
-      createEvent({
-        payload,
-        onSuccess: (res: any) => {
-          toast.success("Event create Sucessfully");
-          form.reset();
-          router.push(`/events/${res}`);
-        },
-      })
-    );
+    if (type == "Create") {
+      dispatch(
+        createEvent({
+          payload,
+          onSuccess: (res: any) => {
+            toast.success("Event create Sucessfully");
+            form.reset();
+            router.push(`/events/${res}`);
+          },
+        })
+      );
+    } else {
+      dispatch(
+        udpateEvent({
+          payload,
+          id,
+          onSuccess: (res: any) => {
+            toast.success("Event Update Sucessfully");
+            form.reset();
+            router.push(`/events/${res}`);
+          },
+        })
+      );
+    }
   }
 
   useEffect(() => {
