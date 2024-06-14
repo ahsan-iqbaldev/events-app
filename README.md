@@ -1,8 +1,3 @@
-Home Page
-
-![image](https://github.com/reven-solutions/events-app/assets/150703987/711704b2-980c-485b-9907-7ff9e5d494d0)
-
-
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
