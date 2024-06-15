@@ -27,8 +27,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   createEvent,
   getCategory,
-  getEventDetails,
-  udpateEvent,
 } from "@/store/slices/eventSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
@@ -41,7 +39,6 @@ type EventFormProps = {
 
 const EventForm = ({ type, eventData }: EventFormProps) => {
   console.log(eventData, "eventData");
-  const { id } = useParams();
   const router = useRouter();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { User } = useSelector((state: any) => state.auth);
@@ -50,7 +47,7 @@ const EventForm = ({ type, eventData }: EventFormProps) => {
   const [files, setFiles] = useState<File[]>([]);
   const [category, setCategory] = useState([]);
 
-  const defaultValues = type === "Update" ? eventData : eventDefaultValues;
+  const defaultValues = eventDefaultValues;
 
   console.log(defaultValues, "initialValues");
 
@@ -58,18 +55,6 @@ const EventForm = ({ type, eventData }: EventFormProps) => {
     resolver: zodResolver(eventFormSchema),
     defaultValues: defaultValues,
   });
-  // if (type == "Update") {
-  form.setValue("title", eventData?.title);
-  form.setValue("description", eventData?.description);
-  form.setValue("location", eventData?.location);
-  form.setValue("imageUrl", eventData?.imageUrl);
-  form.setValue("startDateTime", new Date());
-  form.setValue("startEndTime", new Date());
-  form.setValue("categoryId", eventData?.categoryId);
-  form.setValue("price", eventData?.price);
-  form.setValue("isFree", eventData?.isFree);
-  form.setValue("url", eventData?.url);
-  // }
 
   function onSubmit(value: z.infer<typeof eventFormSchema>) {
     const payload = {
@@ -78,30 +63,16 @@ const EventForm = ({ type, eventData }: EventFormProps) => {
       email: User?.email,
       imageUrl: files[0],
     };
-    if (type == "Create") {
-      dispatch(
-        createEvent({
-          payload,
-          onSuccess: (res: any) => {
-            toast.success("Event create Sucessfully");
-            form.reset();
-            router.push(`/events/${res}`);
-          },
-        })
-      );
-    } else {
-      dispatch(
-        udpateEvent({
-          payload,
-          id,
-          onSuccess: (res: any) => {
-            toast.success("Event Update Sucessfully");
-            form.reset();
-            router.push(`/events/${res}`);
-          },
-        })
-      );
-    }
+    dispatch(
+      createEvent({
+        payload,
+        onSuccess: (res: any) => {
+          toast.success("Event create Sucessfully");
+          form.reset();
+          router.push(`/events/${res}`);
+        },
+      })
+    );
   }
 
   useEffect(() => {
