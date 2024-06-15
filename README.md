@@ -1,4 +1,8 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+HOME PAGE WITHOUT LOGIN
+
+![Uploading screencapture-ticketly-omega-vercel-app-2024-06-15-23_37_53.png…]()
+
+
 
 ## Getting Started
 
