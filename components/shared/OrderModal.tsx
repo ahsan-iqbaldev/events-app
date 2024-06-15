@@ -17,8 +17,7 @@ interface CashOnDeliveryModalProps {
 }
 
 interface FormData {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
   phoneNumber: string;
   selectedState: string;
@@ -44,8 +43,7 @@ const OrderModal: React.FC<CashOnDeliveryModalProps> = ({
   const userId = user?.id;
 
   const [formData, setFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     email: "",
     phoneNumber: "",
     selectedState: "",
@@ -83,7 +81,7 @@ const OrderModal: React.FC<CashOnDeliveryModalProps> = ({
     e.preventDefault();
     console.log("Current City:", currentCity);
     console.log("FormData before submission:", formData);
-    delete formData?.cityOptions
+    delete formData?.cityOptions;
     dispatch(
       addOrder({
         formData,
@@ -120,41 +118,23 @@ const OrderModal: React.FC<CashOnDeliveryModalProps> = ({
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col-reverse md:flex-row">
               <div className="flex-auto w-full md:w-[70%]">
-                <div className="flex flex-wrap -mx-4">
+                <div className="flex flex-wrap -mx-4 mb-6">
                   <div className="w-full md:w-1/2 px-4 mb-4">
                     <label className="block text-sm font-medium text-gray-700">
-                      First Name
+                      Full Name
                     </label>
                     <div className="relative input-group-alternative">
                       <input
                         type="text"
-                        placeholder="First Name"
+                        placeholder="Full Name"
                         onChange={handleInputChange}
-                        value={formData.firstName}
-                        name="firstName"
+                        value={formData.fullName}
+                        name="fullName"
                         className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm form-control"
                         required
                       />
                     </div>
                   </div>
-                  <div className="w-full md:w-1/2 px-4 mb-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Last Name
-                    </label>
-                    <div className="relative input-group-alternative">
-                      <input
-                        type="text"
-                        placeholder="Last Name"
-                        onChange={handleInputChange}
-                        value={formData.lastName}
-                        name="lastName"
-                        className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm form-control"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-wrap -mx-4">
                   <div className="w-full md:w-1/2 px-4 mb-4">
                     <label className="block text-sm font-medium text-gray-700">
                       Email
@@ -165,11 +145,14 @@ const OrderModal: React.FC<CashOnDeliveryModalProps> = ({
                         placeholder="Add Email (optional)"
                         onChange={handleInputChange}
                         value={formData.email}
+                        required
                         name="email"
                         className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm form-control"
                       />
                     </div>
                   </div>
+                </div>
+                <div className="flex flex-wrap -mx-4 mb-6">
                   <div className="w-full md:w-1/2 px-4 mb-4">
                     <label className="block text-sm font-medium text-gray-700">
                       Phone Number
@@ -183,6 +166,23 @@ const OrderModal: React.FC<CashOnDeliveryModalProps> = ({
                         name="phoneNumber"
                         className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm form-control"
                         required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="w-full md:w-1/2 px-4 mb-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Address
+                    </label>
+                    <div className="relative input-group-alternative">
+                      <input
+                        type="textarea"
+                        placeholder="e.g This rental is a perfect spot to explore..."
+                        name="address"
+                        onChange={handleInputChange}
+                        value={formData.address}
+                        required
+                        className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm form-control"
                       />
                     </div>
                   </div>
@@ -243,24 +243,6 @@ const OrderModal: React.FC<CashOnDeliveryModalProps> = ({
                           className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm form-control"
                         />
                       )}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-wrap -mx-4">
-                  <div className="w-full px-4 mb-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Address
-                    </label>
-                    <div className="relative input-group-alternative">
-                      <input
-                        type="textarea"
-                        placeholder="e.g This rental is a perfect spot to explore..."
-                        name="address"
-                        onChange={handleInputChange}
-                        value={formData.address}
-                        required
-                        className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm form-control"
-                      />
                     </div>
                   </div>
                 </div>
