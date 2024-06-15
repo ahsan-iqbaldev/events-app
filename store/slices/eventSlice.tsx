@@ -7,7 +7,7 @@ interface HandleUser {
 }
 interface HandleUserUpdate {
   payload: any;
-  id: string;
+  id: any;
   onSuccess: any;
 }
 
@@ -63,39 +63,6 @@ export const createEvent = createAsyncThunk(
           console.log(doc, "docbythen");
           onSuccess(doc?.id);
         });
-    } catch (err: any) {
-      console.log(err);
-      return rejectWithValue(err.message);
-    }
-  }
-);
-export const udpateEvent = createAsyncThunk(
-  "event/udpateEvent",
-  async ({ payload, id, onSuccess }: HandleUserUpdate, { rejectWithValue }) => {
-    try {
-      console.log(payload);
-
-      const { imageUrl, ...restPayload } = payload;
-
-      const storageRef = firebase
-        .storage()
-        .ref()
-        .child(`Eventimages/${imageUrl.name}`);
-      await storageRef.put(imageUrl);
-      const downloadURL = await storageRef.getDownloadURL();
-      const createdAt = firebase.firestore.FieldValue.serverTimestamp();
-      const finalPayload = {
-        ...restPayload,
-        imageUrl: downloadURL,
-        createdAt,
-      };
-
-      await firebase
-        .firestore()
-        .collection("tickets")
-        .doc(id)
-        .update(finalPayload);
-      onSuccess(id);
     } catch (err: any) {
       console.log(err);
       return rejectWithValue(err.message);
@@ -330,6 +297,8 @@ export const getSearchEvents = createAsyncThunk(
     }
   }
 );
+
+
 
 export const getMyEvents = createAsyncThunk(
   "event/getMyEvents",

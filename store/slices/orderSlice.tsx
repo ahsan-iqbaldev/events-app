@@ -12,8 +12,20 @@ interface addOrder {
 
 interface eventState {
   myTickets: any;
+  orderStats: any;
   loading: boolean;
   error: any;
+}
+
+interface OrderDetailsParams {
+  paramId: any;
+  onSuccess?: (categories: any) => void;
+}
+
+interface Order {
+  id: string;
+  userId: string;
+  // Add other order fields here
 }
 
 export const addOrder = createAsyncThunk(
@@ -99,8 +111,91 @@ export const getMyOrders = createAsyncThunk(
   }
 );
 
+export const getOrderDetails = createAsyncThunk(
+  "order/getOrderDetails",
+  async ({ paramId, onSuccess }: OrderDetailsParams, { rejectWithValue }) => {
+    console.log(paramId, onSuccess, "paramId, onSuccess");
+    try {
+      const snapshot = await firebase
+        .firestore()
+        .collection("orders")
+        .where("productId", "==", paramId)
+        .get();
+
+      const snapshot2 = await firebase
+        .firestore()
+        .collection("tickets")
+        .doc(paramId)
+        .get();
+
+      const ticket = snapshot2.data();
+
+      const categories = snapshot.docs.map((doc) => {
+        const data = doc.data() as Order;
+        return {
+          ...data,
+          id: doc.id,
+          ticket,
+        };
+      });
+
+      console.log(categories, "categories");
+
+      if (onSuccess) {
+        onSuccess(categories);
+      }
+
+      return categories;
+    } catch (err: any) {
+      console.log(err);
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+export const getSearchOrderEvents = createAsyncThunk(
+  "event/getSearchOrderEvents",
+  async ({ query }: any, { rejectWithValue }) => {
+    try {
+      const snapshot = await firebase
+        .firestore()
+        .collection("orders")
+        .doc(query)
+        .get();
+
+      // const categories = { id: snapshot.id, ...snapshot.data() };
+
+      const categories = { id: snapshot.id, ...(snapshot.data() as any) };
+
+      console.log(categories, "categoriescategories");
+
+      const snapshot2 = await firebase
+        .firestore()
+        .collection("tickets")
+        .doc(categories?.productId)
+        .get();
+
+      const ticket = snapshot2.data();
+      console.log(ticket, "ticket");
+
+      const data = {
+        ...categories,
+        ticket,
+      };
+
+      console.log(data, "data");
+
+      return [data];
+    } catch (err: any) {
+      console.log(err);
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 const initialState: eventState = {
   myTickets: null,
+  orderStats: [],
   loading: false,
   error: null,
 };
@@ -122,6 +217,36 @@ const orderSlice = createSlice({
         state.myTickets = action.payload;
       })
       .addCase(getMyOrders.rejected, (state, action) => {
+        console.log("Error");
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getOrderDetails.pending, (state) => {
+        console.log("Running");
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getOrderDetails.fulfilled, (state, action) => {
+        console.log(action.payload, "categories");
+        state.loading = false;
+        state.orderStats = action.payload;
+      })
+      .addCase(getOrderDetails.rejected, (state, action) => {
+        console.log("Error");
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getSearchOrderEvents.pending, (state) => {
+        console.log("Running");
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getSearchOrderEvents.fulfilled, (state, action) => {
+        console.log(action.payload, "categories");
+        state.loading = false;
+        state.orderStats = action.payload;
+      })
+      .addCase(getSearchOrderEvents.rejected, (state, action) => {
         console.log("Error");
         state.loading = false;
         state.error = action.error.message;
