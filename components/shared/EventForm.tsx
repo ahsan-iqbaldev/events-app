@@ -30,7 +30,7 @@ import { toast } from "react-toastify";
 import { useParams, useRouter } from "next/navigation";
 
 type EventFormProps = {
-  type: "Create" | "Update";
+  type: any;
 };
 
 const EventForm = ({ type }: EventFormProps) => {

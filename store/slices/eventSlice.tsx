@@ -299,7 +299,6 @@ export const getSearchEvents = createAsyncThunk(
 );
 
 
-
 export const getMyEvents = createAsyncThunk(
   "event/getMyEvents",
   async ({ userId }: any, { rejectWithValue }) => {
