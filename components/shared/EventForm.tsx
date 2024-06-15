@@ -24,21 +24,16 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  createEvent,
-  getCategory,
-} from "@/store/slices/eventSlice";
+import { createEvent, getCategory } from "@/store/slices/eventSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { useParams, useRouter } from "next/navigation";
 
 type EventFormProps = {
   type: "Create" | "Update";
-  eventData: any;
 };
 
-const EventForm = ({ type, eventData }: EventFormProps) => {
-  console.log(eventData, "eventData");
+const EventForm = ({ type }: EventFormProps) => {
   const router = useRouter();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { User } = useSelector((state: any) => state.auth);
