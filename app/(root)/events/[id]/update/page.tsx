@@ -31,7 +31,7 @@ const UpdateEvent = () => {
       </section>
 
       <div className="wrapper my-8">
-        <EventForm type="Update" eventData={eventData} />
+        <EventForm type="Update" />
       </div>
     </>
   );
