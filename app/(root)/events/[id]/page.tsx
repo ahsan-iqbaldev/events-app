@@ -112,45 +112,7 @@ const EventDetails = () => {
             </div>
           </div>
         </div>
-        <div>
-          <section className="wrapper overflow-x-auto mt-10">
-            <table className="w-full border-collapse border-t">
-              <thead>
-                <tr className="p-medium-14 border-b text-grey-500">
-                  <th className="min-w-[250px] py-3 text-left">Order ID</th>
-                  <th className="min-w-[200px] flex-1 py-3 pr-4 text-left">
-                    Event Title
-                  </th>
-                  <th className="min-w-[150px] py-3 text-left">Buyer</th>
-                  <th className="min-w-[100px] py-3 text-left">Created</th>
-                  <th className="min-w-[100px] py-3 text-right">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  className="p-regular-14 lg:p-regular-16 border-b "
-                  style={{ boxSizing: "border-box" }}
-                >
-                  <td className="min-w-[250px] py-4 text-primary-500">
-                    809380918381
-                  </td>
-                  <td className="min-w-[200px] flex-1 py-4 pr-4">
-                    Ahsan Iqbal
-                  </td>
-                  <td className="min-w-[150px] py-4">
-                    Hamza
-                  </td>
-                  <td className="min-w-[100px] py-4">
-                    0309810
-                  </td>
-                  <td className="min-w-[100px] py-4 text-right">
-                    03912093
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-        </div>
+        <div></div>
       </section>
 
       {/* EVENTS with the same category */}
